@@ -1,27 +1,36 @@
-#importiamo sleep da time
+#lib
 from time import sleep
+import requests
 
-#creriamo una funzione
-def caratteri_finali(testo, n):
-    return testo[-n:]  # Restituisce gli ultimi n caratteri del testo
-
-#creriamo un messaggio di testo
-print("""
-
-!ATTENZIONE!
-Questo programma e in fase di sviluppo,
-quindi per ora non potra vedere tutti i link se sono rick roll.
-
-""")
-
-#dove si va a vedere se i link sono rick roll
+#start of program
 while True:
-    testo_utente = input("Inserisci un URL: ")
+    #for a security
+    try:
+        user_text = input("enter a URL: ")
 
-    # Controlla se gli ultimi 3 caratteri sono un link di rick roll
-    if caratteri_finali(testo_utente, 3) == 'XcQ' or caratteri_finali(testo_utente, 3) == 'gG0'or caratteri_finali(testo_utente, 3) == 'nRw' or caratteri_finali(testo_utente, 3) == 'pv0':
-        print("questo link e un rick roll\n")
-        sleep(2)
-    else:
-        print("Questo link è sicuro, non ci sono rick roll.\n")
-        sleep(2)
+        #see the URL if is ok
+        try:
+            r = requests.get(user_text, timeout=5)
+        except requests.exceptions.MissingSchema:
+            print("Invalid URL.")
+            quit()
+        except requests.exceptions.ConnectionError:
+            print("ERROR CONNECTION.")
+            quit()
+
+        #see if is a rick roll
+        if "Rick Astley" in r.text or "rick astley" in r.text:
+            print("this is a rick roll, stop the program?")
+            sleep(2)
+            Re_user = input("YES/NO: ")
+            if Re_user == "yes" or Re_user == "YES":
+                quit()
+            elif Re_user == "no" or Re_user == "NO":
+                pass
+        else:
+            print("this isn't a rick roll")
+            sleep(2)
+
+    except KeyboardInterrupt:
+        print("stop program from Keyboard")
+        quit()
